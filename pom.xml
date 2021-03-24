@@ -6,7 +6,7 @@
 
     <groupId>me.method17.configobf</groupId>
     <artifactId>ConfigObf</artifactId>
-    <version>1.1</version>
+    <version>2.0</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -35,7 +35,7 @@
                 <configuration>
                     <transformers>
                         <transformer implementation = "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                            <mainClass>me.method17.configobf.CObf</mainClass>
+                            <mainClass>me.method17.configobf.Main</mainClass>
                         </transformer>
                     </transformers>
                 </configuration>
