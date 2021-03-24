@@ -1,5 +1,8 @@
 package me.method17.configobf.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.javascript.jscomp.CompilationLevel;
 import com.google.javascript.jscomp.Compiler;
 import com.google.javascript.jscomp.CompilerOptions;
@@ -26,5 +29,24 @@ public class ScriptUtil {
         compiler.compile(extern, input, options);
 
         return compiler.toSource();
+    }
+
+    public static String obfJson(String json, int amount, int length, String msg) {
+        String result = json;
+        try {
+            Object object = JSON.parse(json);
+            if (object instanceof JSONArray) {
+                result = ((JSONArray) object).toJSONString();
+            } else if (object instanceof JSONObject) {
+                JSONObject jsonObject = ((JSONObject) object);
+                for (int i = 0; i < amount; i++) {
+                    jsonObject.put(OtherUtil.randomString(length), msg);
+                }
+                result = jsonObject.toJSONString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

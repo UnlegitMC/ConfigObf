@@ -29,7 +29,7 @@ public class Main {
         System.out.print("Input do obf script(true/false):");
         boolean obfScript = input.nextLine().equals("true");
 
-        System.out.print("Input do minify json(true/false):");
+        System.out.print("Input do obf json(true/false):");
         boolean minifyJson = input.nextLine().equals("true");
 
         System.out.print("Input config path:");
@@ -117,7 +117,7 @@ public class Main {
                 }
                 if (minifyJson) {
                     if (file.getName().endsWith(".json")) {
-                        OtherUtil.writeFile(file, OtherUtil.doMinifyJson(OtherUtil.readFile(file)));
+                        OtherUtil.writeFile(file, ScriptUtil.obfJson(OtherUtil.readFile(file), amount, length, msg));
                     }
                 }
             }

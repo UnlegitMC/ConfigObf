@@ -1,9 +1,5 @@
 package me.method17.configobf.utils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -42,20 +38,5 @@ public class OtherUtil {
 
     public static int randomInteger(double min, double max) {
         return (int) (Math.random() * (max - min) + min);
-    }
-
-    public static String doMinifyJson(String json) {
-        String result = json;
-        try {
-            Object object = JSON.parse(json);
-            if (object instanceof JSONArray) {
-                result = ((JSONArray) object).toJSONString();
-            } else if (object instanceof JSONObject) {
-                result = ((JSONObject) object).toJSONString();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 }
