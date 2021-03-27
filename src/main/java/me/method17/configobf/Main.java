@@ -1,9 +1,11 @@
 package me.method17.configobf;
 
+import com.alibaba.fastjson.JSONObject;
 import me.method17.configobf.utils.OtherUtil;
 import me.method17.configobf.utils.ScriptUtil;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -32,6 +34,14 @@ public class Main {
         System.out.print("Input do obf json(true/false):");
         boolean minifyJson = input.nextLine().equals("true");
 
+        System.out.print("Input add watermark(true/false):");
+        boolean addWatermark = input.nextLine().equals("true");
+        String wmText="";
+        if(addWatermark){
+            System.out.print("Input watermark text(Support MC Color Code):");
+            wmText=input.nextLine();
+        }
+
         System.out.print("Input config path:");
         File path = new File(input.nextLine());
         if (!path.isDirectory()) {
@@ -42,7 +52,10 @@ public class Main {
         String msg = input.nextLine();
 
         System.out.println("----- STARTING OBF -----");
-        doObfFolder(amount, length, obfFolder, obfFile, minifyJson, path, msg);
+        if(addWatermark){
+            System.out.println("Add watermark");
+            addWatermark(path,wmText);
+        }
         if (obfScript) {
             System.out.println("Obf script");
             obfScript(length, msg, path);
@@ -51,11 +64,61 @@ public class Main {
             System.out.println("Gen null script");
             genNullScript(amount, length, msg, path);
         }
+        doObfFolder(amount, length, obfFolder, obfFile, minifyJson, path, msg);
         System.out.println("----- OBF COMPLETE -----");
     }
 
+    private static void addWatermark(File path,String message){
+        OtherUtil.writeFile(new File(path,"scripts/WaterMark.js"),"/// api_version=2\n" +
+                "var script = registerScript({\n" +
+                "\tname: \"WaterMark\",\n" +
+                "\tversion: \"1.0\",\n" +
+                "\tauthors: [\"CONFIGOBF\"]\n" +
+                "});  \n" +
+                "\n" +
+                "var Timer = Java.type(\"java.util.Timer\");\n" +
+                "var ScaledResolution = Java.type(\"net.minecraft.client.gui.ScaledResolution\");\n" +
+                "var Display = Java.type(\"org.lwjgl.opengl.Display\");\n" +
+                "Display.setTitle(\""+ScriptUtil.colorTaker(message)+"\");\n" +
+                "\n" +
+                "script.registerModule({\n" +
+                "\tname: \"WaterMark\",\n" +
+                "\tdescription: \"BY CONFIGOBF\",\n" +
+                "    category: \"Fun\"\n" +
+                "}, function (module) {\n" +
+                "    var mcHeight;\n" +
+                "\n" +
+                "    module.on(\"update\", function() {\n" +
+                "\t\tmcHeight=new ScaledResolution(mc).getScaledHeight();\n" +
+                "    });\n" +
+                "\n" +
+                "    module.on(\"render2D\", function() {\n" +
+                "\t\tmc.fontRendererObj.drawString(\""+message+"\",3,mcHeight-10,0);\n" +
+                "\t})\n" +
+                "\n" +
+                "    module.on(\"disable\", function() {\n" +
+                "        new Timer().schedule(function() { \n" +
+                "            module.setState(true);\n" +
+                "        }, 10);\n" +
+                "\t})\n" +
+                "});");
+        File moduleFile=new File(path,"modules.json");
+        JSONObject moduleJson = JSONObject.parseObject(OtherUtil.readFile(moduleFile));
+        moduleJson.put("WaterMark",ScriptUtil.getHideModuleSet());
+        OtherUtil.writeFile(moduleFile,moduleJson.toJSONString());
+    }
+
+//    private static void addValueLocker(File path){
+//        JSONObject moduleJson = JSONObject.parseObject(OtherUtil.readFile(new File(path,"modules.json")));
+//        JSONObject valueJson = JSONObject.parseObject(OtherUtil.readFile(new File(path,"values.json")));
+//        for(Map.Entry<String, Object> entry:moduleJson.entrySet()){
+//            String module=entry.getKey();
+//            JSONObject values=e
+//        }
+//    }
+
     private static void obfScript(int length, String msg, File path) {
-        File scriptPath = new File(path.getPath() + "/scripts/");
+        File scriptPath = new File(path,"scripts/");
         for (File file : scriptPath.listFiles()) {
             if (file.isFile() && file.getName().endsWith(".js")) {
                 OtherUtil.writeFile(new File(scriptPath, OtherUtil.randomString(length) + ".js")

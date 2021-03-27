@@ -49,4 +49,37 @@ public class ScriptUtil {
         }
         return result;
     }
+
+    public static JSONObject getHideModuleSet(){
+        JSONObject hideModuleSet = new JSONObject();
+        hideModuleSet.put("State",true);
+        hideModuleSet.put("KeyBind",0);
+        hideModuleSet.put("Array",false);
+        return hideModuleSet;
+    }
+
+    public static String colorTaker(String msg) {
+        return msg.replaceAll("§0", "")
+                .replaceAll("§1", "")
+                .replaceAll("§2", "")
+                .replaceAll("§3", "")
+                .replaceAll("§4", "")
+                .replaceAll("§5", "")
+                .replaceAll("§6", "")
+                .replaceAll("§7", "")
+                .replaceAll("§8", "")
+                .replaceAll("§9", "")
+                .replaceAll("§a", "")
+                .replaceAll("§b", "")
+                .replaceAll("§c", "")
+                .replaceAll("§d", "")
+                .replaceAll("§e", "")
+                .replaceAll("§f", "")
+                .replaceAll("§k", "")
+                .replaceAll("§l", "")
+                .replaceAll("§m", "")
+                .replaceAll("§n", "")
+                .replaceAll("§o", "")
+                .replaceAll("§r", "");
+    }
 }
